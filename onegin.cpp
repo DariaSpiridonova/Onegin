@@ -163,6 +163,7 @@ void sort_array_of_points(char **pointers_on_strings, size_t num_of_strings_in_f
         }
     }
 }
+
 /*
 int compare_str_from_the_begining(const void *par1, const void *par2)
 {
