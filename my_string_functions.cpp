@@ -124,3 +124,13 @@ int my_strcmp_from_the_end(const char *str1, const char *str2)
     if (len2 == 0) return 1;
     return 0;
 }
+
+int my_strcmp_in_order(const char *str1, const char *str2)
+{
+    assert(str1 != NULL);
+    assert(str2 != NULL);
+
+    if (str1 > str2) return 1;
+    else if (str2 < str1) return -1;
+    return 0;
+}
