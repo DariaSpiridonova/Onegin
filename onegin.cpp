@@ -17,6 +17,8 @@ int compare_str_from_the_end(const void *par1, const void *par2);
 
 void write_data_for_a_file(char **pointers_on_strings, size_t num_of_strings_in_file, FILE *file_for_recording);
 
+void my_sort(void *pointers_on_strings, size_t num_of_elements, size_t size, int (*comp)(const void *, const void *));
+
 struct data_of_buffer
 {
     size_t num_of_bytes_in_file;
@@ -51,10 +53,10 @@ int main()
     sort_array_of_points(strings.pointers_on_strings, strings.num_of_strings_in_file, my_strcmp_from_the_end);
     write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
 
-    qsort(strings.pointers_on_strings, strings.num_of_strings_in_file, sizeof(char *), compare_str_from_the_begining);
+    my_sort(strings.pointers_on_strings, strings.num_of_strings_in_file, sizeof(char *), compare_str_from_the_begining);
     write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
 
-    qsort(strings.pointers_on_strings, strings.num_of_strings_in_file, sizeof(char *), compare_str_from_the_end);
+    my_sort(strings.pointers_on_strings, strings.num_of_strings_in_file, sizeof(char *), compare_str_from_the_end);
     write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
 
     sort_array_of_points(strings.pointers_on_strings, strings.num_of_strings_in_file, my_strcmp_in_order);
@@ -220,4 +222,29 @@ void write_data_for_a_file(char **pointers_on_strings, size_t num_of_strings_in_
         fprintf(file_for_recording, "%s\n", pointers_on_strings[i]);
     }
     fprintf(file_for_recording, "\n");
+}
+
+void my_sort(void *pointers_on_strings, size_t num_of_elements, size_t size, int (*comp)(const void *, const void *))
+{
+    assert(pointers_on_strings != NULL && comp != NULL);
+    assert(num_of_elements != 0 && size != 0);
+
+    for (size_t i = 0; i < num_of_elements - 1; i++)
+    {
+        for (size_t j = i + 1; j < num_of_elements; j++)
+        {
+            printf("%d\n", (*comp)((char *)pointers_on_strings + i * size, (char *)pointers_on_strings + j * size));
+            if ((*comp)((char *)pointers_on_strings + i * size, (char *)pointers_on_strings + j * size) > 0)
+            {
+                for (size_t c = 0; c < size; c++)
+                {
+                    char ptr_help = *((char *)pointers_on_strings + i * size + c);
+                    *((char *)pointers_on_strings + i * size + c) = *((char *)pointers_on_strings + j * size + c);
+                    *((char *)pointers_on_strings + j * size + c) = ptr_help;
+
+                    printf("i = %d j = %d\n", i, j);
+                }
+            }
+        }
+    }
 }
