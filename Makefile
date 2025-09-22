@@ -2,7 +2,7 @@ FLAGS = -Wshadow -Winit-self -Wredundant-decls -Wcast-align -Wundef -Wfloat-equa
 
 CXX = g++
 
-SOURCES = my_string_functions.cpp onegin.cpp
+SOURCES = my_string_functions.cpp onegin.cpp main.cpp
 OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
 
 all: onegin.exe

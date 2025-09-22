@@ -4,71 +4,7 @@
 #include <string.h>
 #include <assert.h>
 #include "my_string_functions.h"
-
-int open_files_success(FILE *read_strings, FILE *sorted_strings);
-size_t return_num_of_bytes_in_file(FILE *fp);
-size_t return_num_of_strings_in_file(char *buffer);
-struct data_of_buffer read_to_buffer_from_file(FILE *read_strings);
-void add_pointers_on_strings(char *buffer, char **pointers_on_strings, size_t num_of_strings_in_file);
-struct strings_info get_num_of_strings_and_array_of_points(char *buffer);
-void sort_array_of_points(char **pointers_on_strings, size_t num_of_strings_in_file, int (*my_strcmp)(const char *str1, const char *str2));
-int compare_str_from_the_begining(const void *par1, const void *par2);
-int compare_str_from_the_end(const void *par1, const void *par2);
-
-void write_data_for_a_file(char **pointers_on_strings, size_t num_of_strings_in_file, FILE *file_for_recording);
-
-void my_sort(void *pointers_on_strings, size_t num_of_elements, size_t size, int (*comp)(const void *, const void *));
-
-struct data_of_buffer
-{
-    size_t num_of_bytes_in_file;
-    char *buffer;
-};
-
-struct strings_info
-{
-    size_t num_of_strings_in_file;
-    char **pointers_on_strings;
-};
-
-int main()
-{
-    FILE *read_strings = fopen("original_strings.txt", "rb");
-    FILE *sorted_strings = fopen("sorted_strings.txt", "wb");
-
-    if (!open_files_success(read_strings, sorted_strings))
-        return -1;
-
-    struct data_of_buffer data_in_buffer = read_to_buffer_from_file(read_strings);
-    if (data_in_buffer.buffer == 0 || data_in_buffer.num_of_bytes_in_file == 0)
-        return 2;
-
-    struct strings_info strings = get_num_of_strings_and_array_of_points(data_in_buffer.buffer);
-    if (strings.num_of_strings_in_file == 0 || strings.pointers_on_strings == NULL)
-        return 3;
-
-    sort_array_of_points(strings.pointers_on_strings, strings.num_of_strings_in_file, my_strcmp_from_the_begining);
-    write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
-
-    sort_array_of_points(strings.pointers_on_strings, strings.num_of_strings_in_file, my_strcmp_from_the_end);
-    write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
-
-    my_sort(strings.pointers_on_strings, strings.num_of_strings_in_file, sizeof(char *), compare_str_from_the_begining);
-    write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
-
-    my_sort(strings.pointers_on_strings, strings.num_of_strings_in_file, sizeof(char *), compare_str_from_the_end);
-    write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
-
-    sort_array_of_points(strings.pointers_on_strings, strings.num_of_strings_in_file, my_strcmp_in_order);
-    write_data_for_a_file(strings.pointers_on_strings, strings.num_of_strings_in_file, sorted_strings);
-
-    if (fclose(read_strings) == EOF)
-        return -1;
-    if (fclose(sorted_strings) == EOF)
-        return -1;
-
-    return 0;
-}
+#include "onegin.h"
 
 int open_files_success(FILE *read_strings, FILE *sorted_strings)
 {
@@ -103,7 +39,7 @@ struct data_of_buffer read_to_buffer_from_file(FILE *read_strings)
 
     size_t num_of_bytes_in_file = return_num_of_bytes_in_file(read_strings);
 
-    printf("%d\n", num_of_bytes_in_file); // проверка количества символов в файле
+    // printf("%d\n", num_of_bytes_in_file); // проверка количества символов в файле
 
     char *buffer = (char *)calloc(num_of_bytes_in_file + 1, sizeof(char));
     if (buffer == NULL)
@@ -113,10 +49,10 @@ struct data_of_buffer read_to_buffer_from_file(FILE *read_strings)
     if (num_success_read_symbols < num_of_bytes_in_file)
         return {0, 0};
 
-    printf("%d\n", num_success_read_symbols); // проверка количества успешно прочитанных в буфер символов
+    // printf("%d\n", num_success_read_symbols); // проверка количества успешно прочитанных в буфер символов
 
     buffer[num_success_read_symbols] = '\0';
-    printf("%s\n", buffer); // проверка содержимого буфера
+    // printf("%s\n", buffer); // проверка содержимого буфера
 
     data.num_of_bytes_in_file = num_of_bytes_in_file;
     data.buffer = buffer;
@@ -166,7 +102,7 @@ struct strings_info get_num_of_strings_and_array_of_points(char *buffer)
 
     struct strings_info strings = {0, NULL};
     size_t num_of_strings_in_file = return_num_of_strings_in_file(buffer);
-    printf("%d\n", num_of_strings_in_file); // проверка количества строк в файле
+    // printf("%d\n", num_of_strings_in_file); // проверка количества строк в файле
 
     char **pointers_on_strings = (char **)calloc(num_of_strings_in_file, sizeof(char *));
     add_pointers_on_strings(buffer, pointers_on_strings, num_of_strings_in_file);
@@ -183,15 +119,15 @@ void sort_array_of_points(char **pointers_on_strings, size_t num_of_strings_in_f
     {
         for (size_t j = i + 1; j < num_of_strings_in_file; j++)
         {
-            printf("%d\n", (*my_strcmp)((const char *)(pointers_on_strings[i]), (const char *)(pointers_on_strings[j])));
+            // printf("%d\n", (*my_strcmp)((const char *)(pointers_on_strings[i]), (const char *)(pointers_on_strings[j])));
             if ((*my_strcmp)((const char *)(pointers_on_strings[i]), (const char *)(pointers_on_strings[j])) > 0)
             {
                 char *ptr_help = pointers_on_strings[i];
                 pointers_on_strings[i] = pointers_on_strings[j];
                 pointers_on_strings[j] = ptr_help;
-                printf("i = %d j = %d\n", i, j);
-                printf("%s\n", pointers_on_strings[i]);
-                printf("%s\n", pointers_on_strings[j]);
+                // printf("i = %d j = %d\n", i, j);
+                // printf("%s\n", pointers_on_strings[i]);
+                // printf("%s\n", pointers_on_strings[j]);
             }
         }
     }
@@ -233,7 +169,7 @@ void my_sort(void *pointers_on_strings, size_t num_of_elements, size_t size, int
     {
         for (size_t j = i + 1; j < num_of_elements; j++)
         {
-            printf("%d\n", (*comp)((char *)pointers_on_strings + i * size, (char *)pointers_on_strings + j * size));
+            // printf("%d\n", (*comp)((char *)pointers_on_strings + i * size, (char *)pointers_on_strings + j * size));
             if ((*comp)((char *)pointers_on_strings + i * size, (char *)pointers_on_strings + j * size) > 0)
             {
                 for (size_t c = 0; c < size; c++)
@@ -242,7 +178,7 @@ void my_sort(void *pointers_on_strings, size_t num_of_elements, size_t size, int
                     *((char *)pointers_on_strings + i * size + c) = *((char *)pointers_on_strings + j * size + c);
                     *((char *)pointers_on_strings + j * size + c) = ptr_help;
 
-                    printf("i = %d j = %d\n", i, j);
+                    // printf("i = %d j = %d\n", i, j);
                 }
             }
         }
