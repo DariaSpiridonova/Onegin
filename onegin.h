@@ -4,6 +4,7 @@
 
 int open_files_success(FILE *read_strings, FILE *sorted_strings);
 size_t return_num_of_bytes_in_file(FILE *fp);
+size_t return_num_of_bytes_in_file1(int fd1);
 size_t return_num_of_strings_in_file(char *buffer);
 struct data_of_buffer read_to_buffer_from_file(FILE *read_strings);
 void add_pointers_on_strings(char *buffer, char **pointers_on_strings, size_t num_of_strings_in_file);

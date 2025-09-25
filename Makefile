@@ -2,19 +2,19 @@ FLAGS = -D _DEBUG -ggdb3 -std=c++17 -O0 -Wall -Wextra -Weffc++ -Waggressive-loop
 
 CXX = g++
 
-SOURCES =  my_merge_sort.cpp
+SOURCES =  onegin.cpp main.cpp my_string_functions.cpp 
 OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
 
-all: my_merge_sort.exe
+all: onegin.exe
 
 %.o: %.cpp
 	$(CXX) -c $^ -o $@ $(FLAGS)
 
-my_merge_sort.exe: $(OBJECTS)
-	$(CXX) $^ -o $@
+onegin.exe: $(OBJECTS)
+	$(CXX) $^ -o $@ $(FLAGS)
 
 .PHONY: clean
 
 clean:
 	rm *.o
-	rm my_merge_sort.exe
+	rm onegin.exe

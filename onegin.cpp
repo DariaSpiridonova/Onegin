@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
+#include <sys/stat.h>
 #include "my_string_functions.h"
 #include "onegin.h"
 
@@ -26,9 +27,17 @@ size_t return_num_of_bytes_in_file(FILE *fp)
     if (fp == NULL)
         return 0;
     fseek(fp, 0, SEEK_END);
-    size_t i = ftell(fp);
+    size_t i = (size_t)ftell(fp);
     fseek(fp, 0, SEEK_SET);
     return i;
+}
+
+size_t return_num_of_bytes_in_file1(int fd1)
+{
+    struct stat st1 = {};
+    fstat(fd1, &st1);
+
+    return (size_t)st1.st_size;
 }
 
 struct data_of_buffer read_to_buffer_from_file(FILE *read_strings)
@@ -37,7 +46,7 @@ struct data_of_buffer read_to_buffer_from_file(FILE *read_strings)
 
     struct data_of_buffer data = {0, 0};
 
-    size_t num_of_bytes_in_file = return_num_of_bytes_in_file(read_strings);
+    size_t num_of_bytes_in_file = return_num_of_bytes_in_file1(fileno(read_strings));
 
     // printf("%d\n", num_of_bytes_in_file); // проверка количества символов в файле
 
